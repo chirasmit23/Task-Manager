@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container my-5 p-4 shadow rounded bg-white">
+  <h2 class="text-center mb-4 text-warning">✏️ Update Your Todo</h2>
+  <form action="/update/{{ task.sno }}" method="POST">
+    <div class="mb-3">
+      <label for="title" class="form-label">Task Title</label>
+      <input type="text" class="form-control" name="title" id="title" value="{{ task.title }}" placeholder="Update title...">
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <input type="text" name="description" class="form-control" id="description" value="{{ task.description }}" placeholder="Update description...">
+    </div>
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="confirmUpdate">
+      <label class="form-check-label" for="confirmUpdate">Confirm update</label>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">💾 Save Changes</button>
+  </form>
+</div>
+{% endblock body %}

@@ -1,0 +1,82 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: #FFFDD0;
+        color: black;
+      }
+  .marked-done-text {
+    color: blue !important; 
+  }
+  .item-complete {
+     background-color: #e9ecef; 
+  }
+  .item-complete .accordion-button {
+      background-color: rgba(0, 0, 255, 0.329); /* Match background for button */
+  }
+      .navbar {
+        background: linear-gradient(to right, black, #00c8ffe7);
+      }
+      .navbar-brand  {
+        color: blue !important;
+        font-weight: 800;
+        font-size: 33px;
+      }
+      .nav-link {
+color:red;
+font-size: 20px;
+      }
+      .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem green(0,123,255,.25);
+      }
+      .btn-primary {
+        background: linear-gradient(to right, #007bff, red);
+        border: none;
+      }
+      .btn-outline-dark:hover {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    {% if show_nav %}
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <h1 class="navbar-brand" >Task Manager</h1>
+      </div>
+      <div>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/instructions">📘Instructions</a>
+          </li>
+        </ul>
+        <div style="height: 5px;"></div>
+        <form class="d-flex mb-4" action="/" method="GET">
+          <input class="form-control me-2" type="search" name="query" placeholder="Search your task..." aria-label="Search" value="{{ request.args.get('query', '') }}">
+          <button class="btn btn-outline-success" style="color: darkgreen;" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+    {% endif %}
+    {% block body %}
+    {% endblock body %}
+    <h5 class="text-center" style="font-size: 13px; color: darkgreen;">
+      Contact to owner:
+      <a href="https://www.linkedin.com/in/chirasmit-choudhury-2784152b6" style=" color: blue; text-decoration: none;">LinkedIn</a>
+      &nbsp;&nbsp;&nbsp;
+      <a href="https://www.instagram.com/chirasmit_choudhury"style=" color: blue; text-decoration: none;">Instagram</a>
+    </h5>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+  </body>
+</html>

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% set show_nav = true %}
+{% block body %}
+<style>
+  .w-80 {
+    width: 88%;
+  }
+</style>
+<div class="container my-5 p-4 w-80 shadow rounded bg-white">
+  <h2 class="text-center mb-4 text-primary">📝 Add Your Task</h2>
+  <form action="/" method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="title" class="form-label">Task Title</label>
+      <input type="text" class="form-control" name="title" id="title" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <input type="text" class="form-control" name="description" id="description" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Add Task</button>
+  </form>
+</div>
+<div class="container my-5">
+  <h2 class="text-center text-success mb-4">📋 Your Tasks</h2>
+  {% if alltask|length == 0 %}
+    <div class="alert alert-warning text-center" role="alert">
+      🚨 No Tasks Found! Add one now!
+    </div>
+  {% else %}
+  <div class="table-responsive d-none d-md-block">
+    <table class="table table-hover align-middle table-sm text-nowrap" style="font-size: 0.85rem;">
+      <thead class="table-primary">
+        <tr>
+          <th>S.No</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Created At</th>
+          <th>Attachment</th>
+          <th>Update File</th>
+          <th>Actions</th>
+          <th>Mark</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in alltask %}
+        <tr id="row{{ loop.index }}">
+          <td>{{ loop.index }}</td>
+          <td class="task-text">{{ task.title }}</td>
+          <td class="task-text">{{ task.description }}</td>
+          <td>{{ task.date_created.strftime('%b %d, %Y %I:%M %p') }}</td>
+          <td>
+            {% if task.file_name %}
+              {% set ext = task.file_name.split('.')[-1].lower() %}
+              {% if ext in ['jpg', 'jpeg', 'png', 'gif','mp4'] %}
+                <img src="{{ url_for('uploaded_file', filename=task.file_name) }}" style="max-height: 80px;">
+              {% else %}
+                <a href="{{ url_for('uploaded_file', filename=task.file_name) }}" target="_blank">Download</a>
+              {% endif %}
+            {% else %}
+              No file
+            {% endif %}
+          </td>
+          <td>
+            <form action="/attach_file/{{ task.sno }}" method="POST" enctype="multipart/form-data" class="d-flex flex-column gap-1">
+              {% if task.file_name %}
+                <div class="mb-1 text-muted" style="font-size: 0.75rem;">
+                  <strong>Current:</strong> {{ task.file_name }}
+                </div>
+              {% endif %}
+              <input type="file" name="file" class="form-control form-control-sm">
+              <button type="submit" class="btn btn-sm btn-success mt-1">Attach</button>
+            </form>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a href="/update/{{ task.sno }}" class="btn btn-sm btn-outline-primary">Update</a>
+              <a href="/delete/{{ task.sno }}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+          </td>
+          <td>
+            <input class="form-check-input mark-done" type="checkbox" data-row="row{{ loop.index }}" id="taskCheck{{ loop.index }}">
+            <label class="form-check-label" for="taskCheck{{ loop.index }}"></label>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="accordion d-md-none" id="taskAccordion">
+    {% for task in alltask %}
+    <div class="accordion-item mb-2" id="card{{ loop.index }}">
+      <h2 class="accordion-header" id="heading{{ loop.index }}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+          {{ task.title }}
+        </button>
+      </h2>
+      <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#taskAccordion">
+        <div class="accordion-body">
+          <p><strong>Description:</strong> {{ task.description }}</p>
+          <p><strong>Created At:</strong> {{ task.date_created.strftime('%b %d, %Y %I:%M %p') }}</p>
+
+          <p><strong>Attachment:</strong>
+          {% if task.file_name %}
+            {% set ext = task.file_name.split('.')[-1].lower() %}
+            {% if ext in ['jpg', 'jpeg', 'png', 'gif','mp4'] %}
+              <img src="{{ url_for('uploaded_file', filename=task.file_name) }}" style="max-width: 100%;">
+            {% else %}
+              <a href="{{ url_for('uploaded_file', filename=task.file_name) }}" target="_blank">Download</a>
+            {% endif %}
+          {% else %}
+            No file
+          {% endif %}
+          </p>
+          <form action="/attach_file/{{ task.sno }}" method="POST" enctype="multipart/form-data" class="mb-2">
+            {% if task.file_name %}
+              <div class="mb-1 text-muted" style="font-size: 0.75rem;">
+                <strong>Current:</strong> {{ task.file_name }}
+              </div>
+            {% endif %}
+            <input type="file" name="file" class="form-control mb-1">
+            <button type="submit" class="btn btn-sm btn-success">Attach File</button>
+          </form>
+          <div class="mt-3">
+            <div class="mb-2">
+              <a href="/update/{{ task.sno }}" class="btn btn-sm btn-outline-primary w-100">Update</a>
+            </div>
+            <div class="mb-2">
+              <a href="/delete/{{ task.sno }}" class="btn btn-sm btn-outline-danger w-100">Delete</a>
+            </div>
+            <div class="d-flex justify-content-center my-2">
+              <div class="form-check">
+                <input class="form-check-input mark-done" type="checkbox" data-card="card{{ loop.index }}" id="markCheck{{ loop.index }}">
+                <label class="form-check-label ms-1" for="markCheck{{ loop.index }}" style="color: blue;">Mark</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const checkboxes = document.querySelectorAll('.mark-done');
+    checkboxes.forEach(box => {
+      box.addEventListener('change', function () {
+        const rowId = this.dataset.row;
+        const cardId = this.dataset.card;
+        const isChecked = this.checked;
+        if (rowId) {
+          const row = document.getElementById(rowId);
+          row?.classList.toggle('item-complete', isChecked);
+          row?.querySelectorAll('td.task-text').forEach(cell =>
+            cell.classList.toggle('marked-done-text', isChecked));
+        }
+        if (cardId) {
+          const card = document.getElementById(cardId);
+          card?.classList.toggle('item-complete', isChecked);
+          card?.querySelector('.accordion-button')?.classList.toggle('marked-done-text', isChecked);
+          card?.querySelector('.accordion-body')?.classList.toggle('marked-done-text', isChecked);
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
