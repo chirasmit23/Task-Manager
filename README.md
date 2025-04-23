@@ -14,7 +14,11 @@ Here you can check out my application ->[Task Manager ](https://task-manager-pj5
 2. If you have no created account then you press the signup button and you add any user id and random password to create your account 
 3. You can also follow the instructions(you have to click the instruction button to see instruction) for using this tool
 ## Demo Video
-https://github.com/user-attachments/assets/f69bbf2c-3e21-45ce-a30f-ffe055f0de6c
+
+
+https://github.com/user-attachments/assets/f7220cf4-5b4e-4b2b-a410-d454bc46c50f
+
+
 
 ## Screenshots
 
